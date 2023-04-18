@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico"/>
+    <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0"
+    />
+    <title><%= title %></title>
+</head>
+<body>
+<div id="app">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body,
+        #app {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, \5fae\8f6f\96c5\9ed1, Arial, sans-serif;
+        }
+
+        #app-loading {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .loading-container {
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+            animation: scale .5s 1 cubic-bezier(0.85, 0.25, 0.37, 0.85);
+        }
+
+        .loading {
+            display: flex;
+            height: 100px;
+        }
+
+        #app-loading.dark {
+            background: #111620;
+        }
+
+        #app-loading.light {
+            background: white;
+        }
+
+        .loading > div {
+            display: inline-block;
+            float: none;
+            border: 0 solid currentColor;
+            position: relative;
+            box-sizing: border-box;
+            width: 8px;
+            height: 64px;
+            margin: 0 2px;
+            background: rgb(66, 83, 244);
+            border-radius: 5px;
+            animation: line-scale-pulse-out 0.9s infinite cubic-bezier(0.85, 0.25, 0.37, 0.85);
+        }
+
+        .loading > div:nth-child(3) {
+            animation-delay: -0.9s;
+        }
+
+        .loading > div:nth-child(2),
+        .loading > div:nth-child(4) {
+            animation-delay: -0.7s;
+        }
+
+        .loading > div:nth-child(1),
+        .loading > div:nth-child(5) {
+            animation-delay: -0.5s;
+        }
+
+
+        .title {
+            font-size: 30px;
+            color: rgb(66, 83, 244);
+            margin: 0;
+            font-weight: bold;
+        }
+
+        @keyframes line-scale-pulse-out {
+            0% {
+                transform: scaley(1);
+            }
+
+            50% {
+                transform: scaley(0.3);
+            }
+
+            100% {
+                transform: scaley(1);
+            }
+        }
+
+        @keyframes scale {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+    <div id="app-loading">
+        <div class="loading-container">
+            <div class="loading">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <p class="title"><%= title %></p>
+        </div>
+    </div>
+    <script>
+        const appJson = localStorage.getItem('TOY_APP')
+        const app = appJson ? JSON.parse(appJson) : undefined
+        const isLight = window.matchMedia('(prefers-color-scheme: light)').matches
+        const loadingDom = document.querySelector('#app-loading')
+        const setTheme = (theme) => {
+            loadingDom.className = theme
+        }
+        if (!app) {
+            setTheme(isLight ? 'light' : 'dark')
+        } else {
+            if (app.base.themeModeFollowSystem) {
+                setTheme(isLight ? 'light' : 'dark')
+            } else {
+                setTheme(app.base.themeMode)
+            }
+        }
+    </script>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
